@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>꺼드럭 자아 생성기 — ISN'T THIS BEAUTIFUL?</title>
+<meta name="description" content="10문항으로 뽑는 나의 자아 캐릭터. 심리학 4개 척도 기반, 9:16 결과 카드 즉시 발급.">
+<meta property="og:title" content="꺼드럭 자아 생성기">
+<meta property="og:description" content="10문항으로 뽑는 나의 자아 캐릭터. 넌 확신의 고양이야? 나는 그냥 여우인데.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F2EFEA">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F2EFEA'/%3E%3Cpath d='M16 3v26M16 11l7-5M16 16l-8-5M16 21l6 4M16 8l-5-3' stroke='%23790F12' stroke-width='2.2' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23790F12'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Black Han Sans (OFL) + Bodoni Moda (OFL, Didot 대체). 구글 폰트는 unicode-range로
+     쪼개 배포하므로 실제로 쓰는 글자 조각만 내려받습니다. 자체 호스팅을 원하면
+     같이 드린 BlackHanSansRegular.ttf 와 OFL.txt 를 쓰시면 됩니다. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+<style>
+:root{
+  /* ── UI 팔레트 : 레퍼런스 이미지에서 직접 추출 ── */
+  --paper:      #F2EFEA;
+  --paper-2:    #E7E2DA;
+  --white:      #FFFFFF;  /* 캐릭터 패널 바탕 */
+  --ink:        #17131A;
+  --ink-soft:   #413A42;
+  --ink-mute:   #8B8289;
+  --viscera:    #360203;
+  --blood:      #790F12;
+  --signal:     #B41F26;
+  --flesh:      #DF9698;
+  --gallery:    #183155;
+  --gallery-2:  #58657A;
+
+  --display:'Black Han Sans', 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', sans-serif;
+  /* Didot은 macOS/iOS 기본 탑재 → 애플 기기는 진짜 Didot, 그 외는 Bodoni Moda(OFL) */
+  --en: Didot, 'Bodoni Moda', 'Bodoni 72', Georgia, 'Times New Roman', serif;
+  --sans:'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+  --mono:'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+
+  --gut: clamp(20px, 5.5vw, 34px);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;min-height:100svh;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+canvas{display:block}
+
+#app{position:relative;z-index:1;min-height:100svh;display:flex;flex-direction:column}
+.wrap{width:100%;max-width:560px;margin:0 auto;padding:0 var(--gut)}
+.screen{display:none;flex:1;flex-direction:column;animation:fade .5s ease both}
+.screen.on{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+.rule{height:1px;background:var(--ink);opacity:.22;width:100%}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-mute)}
+
+/* ── 인트로 : 뉴런 그래픽은 여기에만 ── */
+#intro{justify-content:center;padding:clamp(36px,8vh,80px) 0}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero-veins{width:min(100%,286px);aspect-ratio:1;margin:0 auto clamp(4px,1.6vh,14px)}
+.hero-veins canvas{width:100%;height:100%}
+.kicker{font-family:var(--en);font-style:italic;color:var(--gallery);
+  font-size:clamp(15px,4.4vw,20px);margin-bottom:.5em}
+h1.title{font-family:var(--display);font-weight:400;
+  font-size:clamp(44px,13.5vw,70px);line-height:1;letter-spacing:-.02em;
+  margin:0 0 .3em;color:var(--ink)}
+h1.title em{font-style:normal;color:var(--blood)}
+.sub{font-family:var(--en);font-size:clamp(11.5px,3.1vw,14px);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gallery-2);margin-bottom:1.9em}
+.lede{font-family:var(--sans);font-size:clamp(14.5px,3.9vw,17px);line-height:1.8;
+  color:var(--ink-soft);max-width:31em;margin:0 auto 2.2em;word-break:keep-all}
+.lede b{color:var(--blood);font-weight:600}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;
+  border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);
+  padding:.95em 2.2em;font-family:var(--sans);font-weight:600;
+  font-size:clamp(15px,4.2vw,17px);letter-spacing:.02em;
+  transition:background .22s,color .22s,border-color .22s,transform .12s}
+.btn:hover,.btn:focus-visible{background:var(--blood);border-color:var(--blood);color:var(--paper);outline:none}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--blood);border-color:var(--blood);color:var(--paper)}
+.btn.primary:hover,.btn.primary:focus-visible{background:var(--viscera);border-color:var(--viscera)}
+.btn.ghost{border-color:rgba(23,19,26,.3);color:var(--ink-soft);font-weight:500}
+.meta-note{margin-top:1.6em;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+  color:var(--ink-mute);text-transform:uppercase;word-break:keep-all}
+
+/* ── 문항 ── */
+#quiz{padding:clamp(22px,4.5vh,42px) 0 clamp(30px,6vh,54px)}
+.qhead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+.qcount{font-family:var(--en);font-size:13px;letter-spacing:.2em;color:var(--gallery)}
+.pbar{height:2px;background:rgba(23,19,26,.14);position:relative;overflow:hidden;margin-bottom:clamp(26px,5.5vh,48px)}
+.pbar i{position:absolute;inset:0 auto 0 0;background:var(--blood);width:0;transition:width .45s cubic-bezier(.4,0,.2,1)}
+.qtext{font-family:var(--sans);font-weight:700;
+  font-size:clamp(21px,5.9vw,29px);line-height:1.45;letter-spacing:-.02em;
+  margin:0 0 clamp(22px,4.5vh,34px);word-break:keep-all}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:.9em;width:100%;text-align:left;
+  border:1px solid rgba(23,19,26,.26);background:var(--paper);
+  padding:1em 1.1em;font-family:var(--sans);
+  font-size:clamp(14.5px,3.9vw,16.5px);line-height:1.5;
+  transition:background .18s,border-color .18s,color .18s,transform .12s;word-break:keep-all}
+.opt .mk{font-family:var(--en);font-size:13px;color:var(--gallery);flex:0 0 auto;padding-top:.16em;transition:color .18s}
+.opt:hover,.opt:focus-visible{background:var(--blood);border-color:var(--blood);color:var(--paper);outline:none}
+.opt:hover .mk,.opt:focus-visible .mk{color:var(--flesh)}
+.opt:active{transform:translateY(1px)}
+.opt.picked{background:var(--viscera);border-color:var(--viscera);color:var(--paper)}
+.opt.picked .mk{color:var(--flesh)}
+.qfoot{margin-top:auto;padding-top:clamp(20px,4.5vh,36px);display:flex;justify-content:space-between;align-items:center;gap:1em}
+.backlink{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--ink-mute);text-transform:uppercase;padding:6px 0}
+.backlink:hover{color:var(--blood)}
+.backlink[hidden]{visibility:hidden;display:block}
+
+/* ── 판독 중 : 캐릭터가 조립된다 ── */
+#load{justify-content:center;align-items:center;text-align:center;padding:50px 0}
+.load-fig{width:min(70vw,250px);aspect-ratio:1;margin-bottom:24px}
+.load-fig canvas{width:100%;height:100%}
+.load-line{font-family:var(--mono);font-size:11px;letter-spacing:.19em;text-transform:uppercase;color:var(--blood);min-height:1.5em}
+.load-ko{font-family:var(--sans);font-size:clamp(14.5px,4vw,16.5px);color:var(--ink-soft);margin-top:.6em;min-height:1.6em}
+
+/* ── 결과 ── */
+#result{padding:clamp(24px,5vh,44px) 0 clamp(44px,8vh,80px)}
+.rhead{text-align:center;margin-bottom:clamp(16px,3vh,24px)}
+.rhead .eyebrow{display:block;margin-bottom:.5em}
+.cardbox{width:100%;max-width:min(100%,420px);margin:0 auto;
+  box-shadow:0 2px 4px rgba(23,19,26,.06),0 18px 44px -14px rgba(54,2,3,.26)}
+.cardbox canvas{width:100%;height:auto;background:var(--paper)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-width:min(100%,420px);margin:clamp(16px,3vh,24px) auto 0}
+.acts .btn{width:100%;padding:.9em .6em;font-size:clamp(13.5px,3.6vw,15px)}
+.acts .wide{grid-column:1/-1}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);
+  background:var(--ink);color:var(--paper);padding:.8em 1.3em;font-family:var(--sans);font-size:14px;
+  opacity:0;pointer-events:none;transition:opacity .28s,transform .28s;z-index:60;
+  max-width:calc(100vw - 40px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ── 광고 자리 ── 지금은 비어 있습니다. 애드센스/네이티브 배너를 그대로 넣으세요. */
+.adslot{max-width:min(100%,420px);margin:clamp(20px,3.6vh,30px) auto 0;min-height:104px;
+  display:flex;align-items:center;justify-content:center;border:1px dashed rgba(23,19,26,.18)}
+.adslot:empty::after{content:'AD SLOT · 320×100';font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:rgba(23,19,26,.26)}
+.adslot.hidden{display:none}
+
+footer{text-align:center;padding:clamp(28px,5.5vh,50px) var(--gut) clamp(24px,4.5vh,38px);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(23,19,26,.34);word-break:keep-all}
+footer .rule{margin-bottom:1.6em;opacity:.14}
+
+@media (max-width:380px){ :root{--gut:18px} }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══════════════ 1. 인트로 ══════════════ -->
+<section id="intro" class="screen on">
+  <div class="wrap hero">
+    <div class="hero-veins"><canvas id="veinIntro" width="600" height="600" aria-hidden="true"></canvas></div>
+    <p class="kicker" data-t="kicker"></p>
+    <h1 class="title" data-t="title"></h1>
+    <p class="sub" data-t="sub"></p>
+    <p class="lede" data-t="lede"></p>
+    <button class="btn primary" id="start" type="button"></button>
+    <p class="meta-note" data-t="metaNote"></p>
+  </div>
+</section>
+
+<!-- ══════════════ 2. 문항 ══════════════ -->
+<section id="quiz" class="screen">
+  <div class="wrap" style="display:flex;flex-direction:column;flex:1">
+    <div class="qhead">
+      <span class="eyebrow" data-t="quizEyebrow"></span>
+      <span class="qcount" id="qcount">01 / 10</span>
+    </div>
+    <div class="pbar"><i id="pbarFill"></i></div>
+    <h2 class="qtext" id="qtext"></h2>
+    <div class="opts" id="opts"></div>
+    <div class="qfoot">
+      <button class="backlink" id="back" type="button" hidden></button>
+      <span class="eyebrow" id="qhint"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 3. 판독 중 — 캐릭터 조립 ══════════════ -->
+<section id="load" class="screen">
+  <div class="wrap" style="display:flex;flex-direction:column;align-items:center">
+    <div class="load-fig"><canvas id="figLoad" width="560" height="560" aria-hidden="true"></canvas></div>
+    <p class="load-line" id="loadLine"></p>
+    <p class="load-ko" id="loadKo"></p>
+  </div>
+</section>
+
+<!-- ══════════════ 4. 결과 ══════════════ -->
+<section id="result" class="screen">
+  <div class="wrap">
+    <div class="rhead">
+      <span class="eyebrow" data-t="resultEyebrow"></span>
+      <div class="rule" style="max-width:420px;margin:0 auto"></div>
+    </div>
+
+    <!-- 화면에 보이는 이 캔버스가 곧 저장되는 PNG입니다.
+         캐릭터 영역만 매 프레임 다시 그려서 흔들림 애니메이션을 만듭니다. -->
+    <div class="cardbox">
+      <canvas id="card" width="1080" height="1920" role="img" aria-label="결과 카드"></canvas>
+    </div>
+
+    <div class="acts">
+      <button class="btn primary" id="save" type="button"></button>
+      <button class="btn" id="copy" type="button"></button>
+      <button class="btn ghost wide" id="again" type="button"></button>
+    </div>
+
+    <!-- ══ 광고 자리 ══ 상극/찰떡 바로 아래. 여기에 배너를 그대로 넣으면 됩니다.
+         JS 상단 AD_SLOT_VISIBLE = false 로 두면 점선까지 사라집니다. -->
+    <div class="adslot" id="ad-below" aria-hidden="true"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="rule"></div>
+  <span data-t="footer"></span>
+</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   꺼드럭 자아 생성기 — GGEODEUK EGO GENERATOR
+   단일 HTML · 무의존성 · 서버 통신 0회
+
+   10문항을 4개 축으로 채점합니다. 축은 실제 심리 척도에서 가져왔습니다.
+     O  개방성      Openness to Experience (Costa & McCrae 1992, NEO-PI-R)
+                    특히 O2 심미성 · O5 아이디어 국면
+     D  구별 욕구   Need for Uniqueness (Snyder & Fromkin 1977) +
+                    소비자 독특성 욕구 CNFU (Tian, Bearden & Hunter 2001)
+                    — 특히 '유사성 회피' 차원
+     S  자의식      Public Self-Consciousness (Fenigstein, Scheier & Buss 1975;
+                    개정판 Scheier & Carver 1985) + 자기감시
+                    (Snyder 1974; 개정판 Lennox & Wolfe 1984)
+     C  종결 욕구   Need for Closure (Webster & Kruglanski 1994)
+                    — 질서 · 예측 가능성 · 모호성 회피 · 결단성
+
+   축 → 캐릭터 형태 매핑
+     O → 얼굴 다각형의 변 수 (3~15각형, 13단계)
+     S → 얼굴 왜곡률 (무게중심~꼭짓점 거리 편차. 자기교차 없는 별형 다각형 유지)
+     D → 7색 파스텔 팔레트의 색상환 보폭 (0=단색 명도차 → 6=인접면 최대 부조화)
+     C → 다리 모양 (높으면 사각형 = 경직, 낮으면 삼각형 = 유연)
+   ══════════════════════════════════════════════════════════════════ */
+'use strict';
+
+/* ── 설정 ──────────────────────────────────────────────────────── */
+const AD_SLOT_VISIBLE = true;   // 결과 카드 아래 광고 자리 노출 여부
+const AD_IN_CARD      = null;   // 카드 안 스폰서 한 줄. 예: {ko:'PRESENTED BY 어떤 와인바', en:'PRESENTED BY …'}
+const MAX_Q_MS        = 120000; // 문항당 체류시간 상한 (탭 이탈 방어)
+
+/* 응답 속도 구간 (초) — 한국어 문항 + 선택지 4개를 '읽는' 시간만 4~8초입니다.
+   그래서 느린 쪽 기준을 넉넉하게 잡았습니다. */
+const TEMPO_CUT = [2.0, 8.0, 18.0];
+
+/* 병목 문항으로 인정하는 조건 : 5초 이상이면서 중앙값의 1.7배 이상 */
+const BOTTLENECK_MIN_SEC = 5.0;
+const BOTTLENECK_RATIO   = 1.7;
+
+/* ── 언어 : 브라우저 자동 감지 ─────────────────────────────────── */
+const LANG = (function(){
+  const l = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+  return /^ko/i.test(l) ? 'ko' : 'en';
+})();
+const T = o => (o && o[LANG] !== undefined) ? o[LANG] : (o && o.en);
+
+/* ── UI 문자열 ─────────────────────────────────────────────────── */
+const UI = {
+  kicker:      {ko:"Isn't this beautiful?",          en:"Isn't this beautiful?"},
+  title:       {ko:"꺼드럭<em>.</em>",                en:"GGEODEUK<em>.</em>"},
+  sub:         {ko:"Ego Generator · 10 questions",    en:"Ego Generator · 10 questions"},
+  lede:        {ko:"10문항이면 충분합니다.<br>고른 답과 <b>망설인 시간</b>을 심리학 4개 축으로 채점해서,<br>당신만의 <b>자아 캐릭터</b> 한 장을 발급합니다.",
+                en:"Ten questions is plenty.<br>We score your answers — <b>and your hesitation</b> — on four psychological axes,<br>then issue your own <b>ego character</b>."},
+  start:       {ko:"자아 발급받기",                    en:"Issue my ego"},
+  metaNote:    {ko:"소요 2분 · 서버 전송 없음 · 이 기기에서만 계산",
+                en:"2 minutes · nothing sent to a server · computed on this device"},
+  quizEyebrow: {ko:"진단 진행 중",                     en:"Diagnosis in progress"},
+  qhint:       {ko:"솔직하게 고를수록 정확해집니다",    en:"The honest answer scores best"},
+  back:        {ko:"← 이전",                           en:"← Back"},
+  resultEyebrow:{ko:"발급 완료",                       en:"Issued"},
+  save:        {ko:"PNG 저장",                         en:"Save PNG"},
+  copy:        {ko:"이미지 복사",                       en:"Copy image"},
+  share:       {ko:"공유하기",                          en:"Share"},
+  again:       {ko:"다시 발급받기",                      en:"Start over"},
+  footer:      {ko:"꺼드럭 자아 생성기 · 재미로 보는 풍자입니다",
+                en:"Ggeodeuk Ego Generator · satire, for fun"},
+  copied:      {ko:"복사했습니다. 스토리에서 붙여넣기 하세요.", en:"Copied. Paste it into your story."},
+  copyFail:    {ko:"복사가 막혀 있어 대신 저장했습니다.",       en:"Copying was blocked, so we saved it instead."},
+  saved:       {ko:"저장했습니다.",                            en:"Saved."}
+};
+
+const LOAD_LINES = [
+  {en:"SCORING FOUR AXES",           ko:"4개 축 채점"},
+  {en:"FITTING FACE GEOMETRY",       ko:"얼굴 다각형 계산"},
+  {en:"MIXING PALETTE",              ko:"팔레트 배합"},
+  {en:"ATTACHING LIMBS",             ko:"팔다리 부착"},
+  {en:"RENDERING EGO",               ko:"자아 렌더링"}
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   문항 — 10문항 × 4지선다
+   각 선택지에 축 점수(0~3)가 붙습니다. 어느 것이 '정상'인지 표시하지
+   않지만, 모든 문항에 무난하게 고를 만한 선택지가 하나씩 들어 있습니다.
+   ══════════════════════════════════════════════════════════════════ */
+const QUESTIONS = [
+{ q:{ko:"음악을 들을 때 당신은?", en:"When you listen to music, you…"},
+  a:[{ko:"추천 알고리즘이 틀어주는 대로 듣는다",        en:"let the algorithm pick", s:{O:0,D:0}},
+     {ko:"좋아하는 앨범 몇 개를 계속 반복한다",          en:"replay the same few albums", s:{O:1,D:1}},
+     {ko:"장르 안 가리고 새로 나온 걸 찾아 듣는다",      en:"chase whatever is new, any genre", s:{O:3,D:1}},
+     {ko:"아무도 모를 것 같은 걸 찾아내면 기분이 좋다",  en:"feel best finding what nobody knows", s:{O:2,D:3}}]},
+
+{ q:{ko:"SNS에 사진을 올리기 전, 당신은?", en:"Before posting a photo, you…"},
+  a:[{ko:"그냥 바로 올린다",                            en:"just post it", s:{S:0}},
+     {ko:"흔들린 것만 빼고 올린다",                      en:"drop the blurry ones and post", s:{S:1}},
+     {ko:"몇 장 중 제일 나은 걸 고르고 보정도 조금 한다", en:"pick the best of several and edit a little", s:{S:2}},
+     {ko:"올린 뒤에도 몇 번씩 다시 들어가 본다",          en:"keep going back to check it afterwards", s:{S:3}}]},
+
+{ q:{ko:"여행 갈 때 당신의 계획은?", en:"How do you plan a trip?"},
+  a:[{ko:"시간 단위 계획표가 있어야 마음이 놓인다",      en:"an hour-by-hour schedule, or you can't relax", s:{C:3}},
+     {ko:"큰 일정만 정하고 나머지는 그때그때",            en:"the big things booked, the rest as it comes", s:{C:1}},
+     {ko:"숙소만 잡고 나머지는 아무것도 안 정한다",        en:"a bed, and nothing else decided", s:{C:0}},
+     {ko:"갈 곳 목록은 있는데 순서는 안 정한다",          en:"a list of places, no order", s:{C:2}}]},
+
+{ q:{ko:"인스타 스토리에 “이거 어디예요?” DM이 왔다.", en:"A DM on your story: “Where is this?”"},
+  a:[{ko:"그냥 어딘지 알려준다",                          en:"You just tell them where", s:{D:0,S:0}},
+     {ko:"알려주고 뭐가 맛있었는지까지 덧붙인다",          en:"You tell them, plus what to order", s:{D:0,S:2}},
+     {ko:"알려주긴 하는데 “지금은 예전만 못해요”를 붙인다", en:"You tell them, adding “it's not what it was”", s:{D:2,S:2}},
+     {ko:"굳이 안 알려준다",                              en:"You'd rather not say", s:{D:3,S:1}}]},
+
+{ q:{ko:"처음 가는 식당에서 메뉴를 고를 때", en:"Ordering at a restaurant you've never been to"},
+  a:[{ko:"대표 메뉴를 시킨다",                            en:"the signature dish", s:{O:0,C:2}},
+     {ko:"리뷰에 제일 많이 나온 걸 시킨다",                en:"whatever the reviews mention most", s:{O:1,C:3}},
+     {ko:"직원에게 물어보고 추천받은 걸 시킨다",            en:"ask the staff and take their pick", s:{O:2,C:1}},
+     {ko:"처음 보는 이름의 메뉴를 시킨다",                  en:"the one whose name you don't recognise", s:{O:3,C:0}}]},
+
+{ q:{ko:"대화 중에 상대가 사실을 잘못 알고 있다.", en:"Mid-conversation, they've got a fact wrong."},
+  a:[{ko:"그냥 넘어간다",                                 en:"You let it go", s:{S:1,C:0,D:0}},
+     {ko:"자연스럽게 맞는 정보를 흘린다",                   en:"You slip the right version in", s:{S:2,C:1,D:1}},
+     {ko:"바로 정정해준다",                               en:"You correct them right away", s:{S:0,C:3,D:2}},
+     {ko:"그때는 넘어가고 나중에 혼자 계속 생각난다",        en:"You let it go and think about it all evening", s:{S:3,C:2,D:1}}]},
+
+{ q:{ko:"좋아하던 가게나 가수가 갑자기 엄청 유명해졌다.", en:"A place or artist you loved suddenly blows up."},
+  a:[{ko:"잘 됐다 싶고 계속 좋아한다",                     en:"Good for them. You still love it", s:{D:0,O:0}},
+     {ko:"원래 유명한지 아닌지는 신경 안 썼다",             en:"You never tracked whether it was popular", s:{D:1,O:2}},
+     {ko:"좋긴 한데 예전만큼 자주 안 가게 된다",             en:"Still good, but you go less often now", s:{D:2,O:0}},
+     {ko:"솔직히 좀 시들해진다",                           en:"Honestly, some of the shine comes off", s:{D:3,O:3}}]},
+
+{ q:{ko:"단톡방에 메시지를 보냈는데 아무도 반응이 없다.", en:"You post in the group chat. Nobody replies."},
+  a:[{ko:"별생각 없다",                                   en:"You don't think about it", s:{S:0}},
+     {ko:"다들 바쁜가 보다 하고 넘어간다",                  en:"Everyone's busy. You move on", s:{S:1}},
+     {ko:"내가 뭘 이상하게 썼나 다시 읽어본다",              en:"You reread it to see if it came out wrong", s:{S:2}},
+     {ko:"읽음 표시 숫자를 세어보게 된다",                  en:"You start counting who's seen it", s:{S:3}}]},
+
+{ q:{ko:"아무 약속 없는 주말 오후, 당신은?", en:"A free Saturday afternoon. You…"},
+  a:[{ko:"집에서 쉬거나 늘 가던 데를 간다",                en:"stay in, or go where you always go", s:{O:0,D:0}},
+     {ko:"보고 싶었던 영화나 전시를 하나 본다",              en:"see the film or show you'd meant to", s:{O:2,D:1}},
+     {ko:"안 가본 동네를 걸어본다",                        en:"walk a neighbourhood you don't know", s:{O:3,D:2}},
+     {ko:"벼르던 작업을 붙잡는다",                          en:"finally get to the thing you've been making", s:{O:0,D:2}}]},
+
+{ q:{ko:"누가 “너 무슨 스타일 좋아해?”라고 물으면", en:"“So what kind of stuff are you into?”"},
+  a:[{ko:"대충 이런 거, 하고 짧게 말한다",                 en:"You give a short, rough answer", s:{C:1,D:0}},
+     {ko:"딱 잘라 한 단어로 답한다",                       en:"One word. Done", s:{C:3,D:1}},
+     {ko:"한마디로 말하기 어려워서 예시를 여러 개 든다",     en:"Hard to summarise, so you list examples", s:{C:0,D:2}},
+     {ko:"설명하다 보면 길어진다. 물어봤으니까",             en:"It gets long. They did ask", s:{C:0,D:3}}]}
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   캐릭터 이름 = [수식어] + [동물]
+     동물  16종 ← D밴드(4) × O밴드(4)   — 무엇을 좋아하는가
+     수식어 16종 ← S밴드(4) × C밴드(4)  — 어떻게 구는가
+   16 × 16 = 256가지 이름
+   ══════════════════════════════════════════════════════════════════ */
+const ANIMALS = [
+ /* D0 대중친화 */
+ {ko:"햄스터",   en:"Hamster",   line:{ko:"좋아하는 게 확실하고, 그 안에서 아주 오래 행복합니다.",           en:"You know what you like, and you stay happy in it for years."}},
+ {ko:"오리",     en:"Duck",      line:{ko:"남들 다 좋다는 걸 진짜로 좋아합니다. 그게 사실 제일 어렵습니다.", en:"You actually like the popular thing. That's harder than it sounds."}},
+ {ko:"강아지",   en:"Dog",       line:{ko:"누가 뭘 좋아한다고 하면 일단 같이 좋아해 봅니다.",               en:"If someone loves something, you'll give it a go too."}},
+ {ko:"돌고래",   en:"Dolphin",   line:{ko:"새로운 걸 잘 받아들이면서도 유난은 떨지 않습니다.",             en:"You take in new things without making it a whole thing."}},
+ /* D1 조용한 취향 */
+ {ko:"고양이",   en:"Cat",       line:{ko:"취향이 분명히 있는데 굳이 설명하지는 않습니다.",                en:"You definitely have taste. You just don't explain it."}},
+ {ko:"토끼",     en:"Rabbit",    line:{ko:"고른 것만 오래 봅니다. 넓히는 데는 관심이 없습니다.",            en:"You go deep on a few things and don't bother widening."}},
+ {ko:"수달",     en:"Otter",     line:{ko:"재밌어 보이면 일단 해봅니다. 오래 가지는 않습니다.",             en:"If it looks fun you'll try it. It rarely lasts."}},
+ {ko:"까치",     en:"Magpie",    line:{ko:"여기저기서 반짝이는 걸 물어옵니다. 대부분 안 씁니다.",          en:"You collect shiny things from everywhere. Most go unused."}},
+ /* D2 뚜렷한 취향 */
+ {ko:"올빼미",   en:"Owl",       line:{ko:"아는 건 깊은데, 아는 분야가 좁습니다.",                        en:"What you know, you know deeply. It's a narrow field."}},
+ {ko:"여우",     en:"Fox",       line:{ko:"적당히 알고 적당히 아는 척합니다. 균형이 훌륭합니다.",          en:"You know enough and bluff exactly enough. Well balanced."}},
+ {ko:"너구리",   en:"Raccoon",   line:{ko:"이것저것 손대면서 티는 안 내려고 합니다.",                     en:"You dabble in everything and try not to show it."}},
+ {ko:"문어",     en:"Octopus",   line:{ko:"여덟 방향으로 취향이 뻗어 있어서 본인도 정리를 못 합니다.",     en:"Your taste runs in eight directions. You can't file it either."}},
+ /* D3 최대 꺼드럭 */
+ {ko:"두루미",   en:"Crane",     line:{ko:"한 가지를 아주 높은 데다 올려놓고 삽니다.",                    en:"You've put one thing on a very high shelf and live under it."}},
+ {ko:"표범",     en:"Leopard",   line:{ko:"혼자 다니고, 남들이 모르는 데를 압니다.",                      en:"You go alone, and you know the places nobody's posted."}},
+ {ko:"큰까마귀", en:"Raven",     line:{ko:"다 봤고 다 압니다. 그래서 잘 안 놀랍니다.",                    en:"You've seen it, you know it, and it takes a lot to surprise you."}},
+ {ko:"해파리",   en:"Jellyfish", line:{ko:"정해진 형태가 없습니다. 그날 물살에 따라 다릅니다.",            en:"No fixed shape. It depends on the current that day."}}
+];
+
+const MODIFIERS = [
+ /* S0 */
+ {ko:"느긋한",     en:"Unbothered",      line:{ko:"계획도 눈치도 없이 흘러갑니다. 그래서 잘 안 지칩니다.",        en:"No plan, no radar, no problem. That's why you don't burn out."}},
+ {ko:"무던한",     en:"Easygoing",       line:{ko:"웬만한 건 그러려니 합니다. 진짜로 그렇습니다.",                en:"Most things are fine by you. Actually fine."}},
+ {ko:"단단한",     en:"Steady",          line:{ko:"정해둔 방식이 있고, 그게 실제로 잘 굴러갑니다.",              en:"You have a way of doing things, and it works."}},
+ {ko:"확신의",     en:"Certain",         line:{ko:"틀릴 수도 있다는 생각을 자주 하지는 않습니다.",              en:"The thought that you might be wrong doesn't come up often."}},
+ /* S1 */
+ {ko:"태평한",     en:"Breezy",          line:{ko:"남의 시선을 조금 신경 쓰지만 금방 잊습니다.",                en:"You notice how you're coming across, then forget about it."}},
+ {ko:"눈치 빠른",  en:"Perceptive",      line:{ko:"분위기를 빨리 읽고 적당히 맞춰줍니다.",                      en:"You read the room fast and adjust just enough."}},
+ {ko:"야무진",     en:"Sharp",           line:{ko:"할 건 하고 챙길 건 챙깁니다. 티도 조금 냅니다.",             en:"You get it done and handled — and let it show, a little."}},
+ {ko:"직진하는",   en:"Straight-Line",   line:{ko:"결론부터 말합니다. 중간 과정은 생략합니다.",                  en:"You lead with the conclusion. The middle is optional."}},
+ /* S2 */
+ {ko:"조심스러운", en:"Careful",         line:{ko:"한 번 더 생각하고 말합니다. 대체로 옳은 선택입니다.",         en:"You think once more before speaking. Usually the right call."}},
+ {ko:"신경 쓰는",  en:"Second-Guessing", line:{ko:"보낸 메시지를 다시 읽습니다. 이미 잘 썼는데도요.",           en:"You reread the message you sent. It was already fine."}},
+ {ko:"깔끔 떠는",  en:"Fussy",           line:{ko:"정돈된 상태를 좋아하고, 남 눈에도 그렇게 보이길 바랍니다.",   en:"You like things tidy — and like being seen keeping them tidy."}},
+ {ko:"못 참는",    en:"Impatient",       line:{ko:"틀린 걸 보면 손이 먼저 나갑니다. 나중에 조금 후회합니다.",    en:"Wrong information moves your hands first. Mild regret follows."}},
+ /* S3 */
+ {ko:"예민한",     en:"Highly-Strung",   line:{ko:"감지하는 게 너무 많아서 자주 피곤합니다.",                    en:"You pick up too much signal. It's exhausting."}},
+ {ko:"자꾸 재는",  en:"Overthinking",    line:{ko:"말하기 전에 머릿속으로 세 가지 버전을 만들어 봅니다.",         en:"You draft three versions in your head before speaking."}},
+ {ko:"잠 못 드는", en:"Sleepless",       line:{ko:"오늘 한 말이 밤에 한 번 더 재생됩니다.",                     en:"Today's sentences get one more play at night."}},
+ {ko:"뒤척이는",   en:"Restless",        line:{ko:"확신은 있는데, 그 확신이 자꾸 스스로를 찌릅니다.",            en:"You're sure. The certainty keeps poking you anyway."}}
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   응답 속도 — 기준을 넉넉하게 잡았습니다.
+   한국어 문항 + 선택지 4개를 읽는 데만 보통 4~8초 걸립니다.
+   ══════════════════════════════════════════════════════════════════ */
+const TEMPO = [
+ {name:{ko:"광클",       en:"Reflex"},
+  line:{ko:"평균 {avg}초. 읽기도 전에 손이 먼저 갔습니다.",                 en:"{avg}s average. Your hand moved before your eyes did."}},
+ {name:{ko:"보통 속도",  en:"Steady"},
+  line:{ko:"평균 {avg}초. 읽고 고르는 딱 그만큼 걸렸습니다.",               en:"{avg}s average. Exactly as long as reading and choosing takes."}},
+ {name:{ko:"신중",       en:"Deliberate"},
+  line:{ko:"평균 {avg}초. 문항마다 한 번씩 더 생각했습니다.",               en:"{avg}s average. One extra thought per question."}},
+ {name:{ko:"과잉 숙고",  en:"Overdeliberate"},
+  line:{ko:"평균 {avg}초. 4지선다에 이만큼 쓰는 사람은 흔치 않습니다.",     en:"{avg}s average. Few people spend this long on four options."}}
+];
+
+/* 병목 문항 — 마지막 항목은 '병목 없음' */
+const BOTTLENECK = [
+ {ko:"Q1(음악)에서 {s}초. 뭘 듣는지가 그렇게까지 중요했습니다.",                 en:"{s}s on Q1. What you listen to mattered that much."},
+ {ko:"Q2(업로드)에서 {s}초. 올리기 전 습관을 인정하는 데 걸린 시간입니다.",       en:"{s}s on Q2 — the time it took to admit your posting habit."},
+ {ko:"Q3(여행)에서 {s}초. 계획형인지 아닌지가 매번 헷갈립니다.",                 en:"{s}s on Q3. Whether you're a planner is still unsettled."},
+ {ko:"Q4(DM)에서 {s}초. 알려줄지 말지가 그렇게 어려웠습니다.",                   en:"{s}s on Q4. Telling them was somehow a hard call."},
+ {ko:"Q5(메뉴)에서 {s}초. 실제 식당에서도 이만큼 걸리시죠.",                     en:"{s}s on Q5. It takes about this long in real restaurants too."},
+ {ko:"Q6(정정)에서 {s}초. 정말 그냥 넘어간 적이 있었는지 되짚어봤습니다.",         en:"{s}s on Q6, checking whether you've ever actually let it go."},
+ {ko:"Q7(유명해짐)에서 {s}초. 시들해진 적 있다는 걸 인정하는 데 걸렸습니다.",     en:"{s}s on Q7 — admitting the shine has come off before."},
+ {ko:"Q8(단톡방)에서 {s}초. 짚이는 장면이 하나 있었던 모양입니다.",              en:"{s}s on Q8. A specific evening came to mind."},
+ {ko:"Q9(주말)에서 {s}초. 실제로 뭘 하며 보내는지 떠올리는 게 오래 걸렸습니다.",  en:"{s}s on Q9, working out what you actually do with them."},
+ {ko:"Q10(취향)에서 {s}초. 한마디로 정리가 안 되는 게 맞습니다.",                en:"{s}s on Q10. It really doesn't summarise."},
+ {ko:"특별히 오래 붙잡은 문항은 없었습니다.",                                    en:"No single question held you up."}
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   상극 / 찰떡 — 동물 격자에서 계산합니다.
+     상극 = 대각선 반대편 (D·O 모두 반전)
+     찰떡 = 구별 욕구는 같고 개방성만 한 칸 다른 쪽
+   ══════════════════════════════════════════════════════════════════ */
+const CLASH_LINE = [
+ {ko:"당신이 20분 걸려 고른 걸 그쪽은 3초 만에 고릅니다.",              en:"They pick in three seconds what takes you twenty minutes."},
+ {ko:"같은 자리에 앉아 완전히 다른 걸 보고 나옵니다.",                   en:"Same table, two entirely different evenings."},
+ {ko:"서로의 추천 목록을 끝까지 안 열어봅니다.",                        en:"Neither of you ever opens the other's recommendations."},
+ {ko:"대화는 되는데 결론이 매번 다릅니다.",                             en:"The conversation works. The conclusion never matches."}
+];
+const MATCH_LINE = [
+ {ko:"말 안 해도 어느 정도는 통합니다. 그게 편합니다.",                  en:"You get each other without explaining. That's the appeal."},
+ {ko:"취향의 절반이 겹치고, 나머지 절반이 재밌습니다.",                  en:"Half your taste overlaps. The other half is the fun part."},
+ {ko:"같이 있으면 서로 조금 더 솔직해집니다.",                          en:"You're both slightly more honest around each other."},
+ {ko:"추천을 주고받으면 대체로 성공합니다.",                            en:"Recommendations between you usually land."}
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   7색 파스텔 — 색상환 위에 균등 배치. 팔레트 모드가 커질수록
+   인접한 신체 부위끼리 색상 보폭이 벌어져 부조화가 커집니다.
+   ══════════════════════════════════════════════════════════════════ */
+const HUES = [18, 46, 82, 158, 206, 253, 336];   // 살구·버터·라임·민트·하늘·라벤더·로즈
+/* [색상보폭, 명도편차, 채도가산] */
+const PALETTE_MODE = [
+  [0,  3,  0],   // 0 · 가장 대중적 : 한 색, 명도차도 거의 없음
+  [0, 11,  2],   // 1 · 한 색의 명도 변주
+  [1,  6,  4],   // 2 · 인접 2색
+  [1, 13,  7],   // 3 · 인접 3색
+  [2,  9, 10],   // 4 · 한 칸 건너 3색
+  [2, 15, 14],   // 5 · 한 칸 건너 4색
+  [3, 17, 18]    // 6 · 7색환 최대 보폭 — 인접면 부조화 최대
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   설명문 셋째 줄 — 심리학적 분석.
+   구별 욕구(D) × 공적 자의식(S) 격자입니다. 첫 줄이 D×O(무엇을 좋아하나),
+   둘째 줄이 S×C(어떻게 구나)를 다루므로, 셋째 줄은 남은 조합인 D×S를 읽어
+   세 줄이 겹치지 않게 했습니다. 네 축이 각각 두 번씩 등장합니다.
+   ══════════════════════════════════════════════════════════════════ */
+const ANALYSIS = [
+ /* D0 */
+ {ko:"구별 욕구도 자의식도 낮습니다. 남과 달라 보일 필요를 거의 안 느끼는 편안한 유형입니다.",
+  en:"Low need for uniqueness, low public self-consciousness. You rarely feel any need to look different."},
+ {ko:"구별 욕구가 낮고 자의식은 보통. 눈치는 보되 그것 때문에 취향을 바꾸지는 않습니다.",
+  en:"Low distinction drive, average self-consciousness. You read the room without letting it move your taste."},
+ {ko:"구별 욕구는 낮은데 공적 자의식이 높습니다. 튀고 싶어서가 아니라 실수할까 봐 신경 씁니다.",
+  en:"Low distinction, high public self-consciousness. Not a fear of blending in — a fear of getting it wrong."},
+ {ko:"구별 욕구는 낮고 자의식은 아주 높습니다. 남과 같아지려 애쓰면서 그게 잘 됐는지 계속 확인합니다.",
+  en:"Low distinction, very high self-consciousness. You work at fitting in, then check whether it worked."},
+ /* D1 */
+ {ko:"구별 욕구는 약간, 자의식은 낮은 편. 취향은 분명한데 그걸 증명할 생각이 없습니다.",
+  en:"Mild distinction drive, low self-consciousness. You have taste and no urge to prove it."},
+ {ko:"구별 욕구와 자의식이 둘 다 중간입니다. 가장 흔한 조합이고, 그래서 제일 무난합니다.",
+  en:"Distinction and self-consciousness both mid-range. The commonest combination, and the easiest to live with."},
+ {ko:"구별 욕구는 약한데 자의식이 높습니다. 남달라 보이는 것보다 어색해 보이는 걸 더 싫어합니다.",
+  en:"Weak distinction drive, high self-consciousness. You'd rather look ordinary than look awkward."},
+ {ko:"약한 구별 욕구에 아주 높은 자의식. 조용히 다르고 싶은데 그 조용함마저 신경 쓰입니다.",
+  en:"Mild distinction, very high self-consciousness. You want to differ quietly — and the quiet worries you too."},
+ /* D2 */
+ {ko:"구별 욕구는 뚜렷하고 자의식은 낮습니다. 남 시선과 무관하게 자기 취향으로 갑니다.",
+  en:"Clear distinction drive, low self-consciousness. You go your own way regardless of who is watching."},
+ {ko:"뚜렷한 구별 욕구에 적당한 자의식. 남과 다른 걸 고르되 티 나는 선까지만 갑니다.",
+  en:"Clear distinction, moderate self-consciousness. You take the different option, up to the point it shows."},
+ {ko:"구별 욕구와 자의식이 둘 다 높습니다. 달라 보이고 싶은 마음과 어떻게 보일지 걱정이 같은 크기입니다.",
+  en:"Distinction and self-consciousness both high. Wanting to differ and worrying how it reads, in equal measure."},
+ {ko:"높은 구별 욕구에 아주 높은 자의식. 차별화가 곧 평가 대상이라, 고를 때마다 두 번 계산합니다.",
+  en:"High distinction, very high self-consciousness. Differentiation gets graded too, so you calculate twice."},
+ /* D3 */
+ {ko:"구별 욕구가 최고치인데 자의식은 낮습니다. 남에게 관심이 없어서 결과적으로 제일 다릅니다.",
+  en:"Maximum distinction drive, low self-consciousness. Uninterested in others, and therefore the most different."},
+ {ko:"최고치 구별 욕구에 낮은 자의식. 유사성 회피는 강하지만 그걸 설명할 필요는 못 느낍니다.",
+  en:"Maximum distinction, low self-consciousness. Strong avoidance of similarity, no urge to explain it."},
+ {ko:"구별 욕구 최고치에 높은 자의식. 유사성 회피가 강한데 그게 어떻게 비칠지도 함께 계산합니다.",
+  en:"Maximum distinction, high self-consciousness. Avoidance of similarity, plus a running estimate of how it looks."},
+ {ko:"구별 욕구도 자의식도 최고치. 다르고 싶고, 달라 보이고 싶고, 티 나는 것도 싫은 꺼드럭의 정중앙입니다.",
+  en:"Distinction and self-consciousness both maxed. Dead centre: want to differ, want it seen, hate that it shows."}
+];
+
+/* 도형 해설 — 기본은 꺼 뒀습니다. SHOW_SHAPE_LINE = true 로 바꾸면
+   설명문 맨 뒤에 "얼굴은 8각형이고, 다리는 삼각형입니다…" 한 줄이 붙습니다. */
+const SHOW_SHAPE_LINE = false;
+const SHAPE_LEG = [
+ {ko:"다리는 삼각형입니다. 결론을 서두르지 않는 쪽입니다.",  en:"Triangle legs — you're in no rush to conclude."},
+ {ko:"다리는 사각형입니다. 한번 정하면 잘 안 바꿉니다.",     en:"Square legs — once decided, rarely revisited."}
+];
+const SHAPE_COL = [
+ {ko:"색은 한 계열 안에서만 조용히 움직입니다.",            en:"The colours stay quietly inside one family."},
+ {ko:"색이 두어 계열로 갈라집니다.",                       en:"The colours split across a couple of families."},
+ {ko:"붙어 있는 면끼리 색이 부딪히게 골랐습니다.",           en:"Touching surfaces were given colours that argue."}
+];
+const SHAPE_FACE = {ko:"얼굴은 {n}각형이고, ", en:"A {n}-sided face. "};
+
+const STAT_LABEL = [
+ {ko:"개방",   en:"OPENNESS"},
+ {ko:"구별",   en:"DISTINCTION"},
+ {ko:"자의식", en:"SELF-FOCUS"},
+ {ko:"확신",   en:"CLOSURE"}
+];
+const CARD_LABEL = {
+  you:     {ko:"당신의 자아",       en:"YOUR EGO"},
+  tempo:   {ko:"응답 속도",         en:"TEMPO"},
+  clash:   {ko:"상극",             en:"CLASHES WITH"},
+  match:   {ko:"찰떡",             en:"CLICKS WITH"},
+  brand:   {ko:"꺼드럭 자아 생성기", en:"GGEODEUK EGO GENERATOR"},
+  tagline: {ko:"Isn't this beautiful?", en:"Isn't this beautiful?"}
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   1. 유틸
+   ══════════════════════════════════════════════════════════════════ */
+const $  = s => document.querySelector(s);
+const PAL = {
+  paper:'#F2EFEA', white:'#FFFFFF', ink:'#17131A', inkSoft:'#413A42',
+  inkMute:'#8B8289', viscera:'#360203', blood:'#790F12', signal:'#B41F26',
+  flesh:'#DF9698', gallery:'#183155', gallery2:'#58657A'
+};
+const F_DISPLAY = '"Black Han Sans", "Pretendard Variable", Pretendard, sans-serif';
+const F_EN      = 'Didot, "Bodoni Moda", "Bodoni 72", Georgia, serif';
+const F_SANS    = '"Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif';
+const F_MONO    = 'ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace';
+const TRK       = LANG === 'ko' ? 1.8 : 3.2;   // 라벨 자간
+
+const FACE_EYES = true;   // 얼굴에 눈 두 점을 찍을지. false면 순수 도형 조합만 남습니다.
+
+function mulberry32(a){
+  return function(){
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+/* 밴드 경계는 이론적 최대값(0.25/0.5/0.75)이 아니라, 가능한 모든 답안
+   1,048,576개를 전부 돌려 얻은 각 축의 실제 사분위수입니다. 규준참조 방식이라
+   네 밴드가 고르게 채워지고, 16종 동물·16종 수식어가 전부 등장합니다. */
+const AXIS_CUT = {
+  O:[0.3333, 0.4167, 0.5833],
+  D:[0.3750, 0.5000, 0.6250],
+  S:[0.3636, 0.5455, 0.6364],
+  C:[0.3333, 0.4167, 0.5833]
+};
+const bandOf = (v, cut) => v < cut[0] ? 0 : v < cut[1] ? 1 : v < cut[2] ? 2 : 3;
+
+/* ══════════════════════════════════════════════════════════════════
+   2. 뉴런 그래픽 — 인트로 화면 전용
+   ══════════════════════════════════════════════════════════════════ */
+function growVeins(seed, W, H, cfg){
+  const rng = mulberry32(seed >>> 0), segs = [], maxDepth = cfg.depth || 8;
+  function branch(x, y, ang, len, w, depth){
+    if (depth > maxDepth || w < 0.2 || len < 1.6) return;
+    if (x < -W*0.5 || x > W*1.5 || y < -H*0.5 || y > H*1.5) return;
+    const bend = (rng() - 0.5) * 0.62;
+    const ex = x + Math.cos(ang)*len, ey = y + Math.sin(ang)*len;
+    const mx = x + Math.cos(ang - bend)*len*0.5, my = y + Math.sin(ang - bend)*len*0.5;
+    segs.push({x, y, mx, my, ex, ey, w, depth});
+    const kids = depth < 2 ? 3 : (rng() < 0.62 ? 2 : 3);
+    for (let i = 0; i < kids; i++){
+      const spread = 0.5 + rng()*0.72;
+      const a = ang + (i - (kids-1)/2)*spread + (rng()-0.5)*0.34;
+      branch(ex, ey, a, len*(0.62 + rng()*0.26), w*(0.58 + rng()*0.2), depth+1);
+    }
+  }
+  const tw = cfg.trunk || 12, tl = cfg.len || Math.min(W,H)*0.19;
+  branch(W*0.06, H*0.02, 0.72 + (rng()-0.5)*0.3, tl, tw, 0);
+  branch(W*0.97, H*0.96, Math.PI + 0.72 + (rng()-0.5)*0.3, tl, tw, 0);
+  for (let i = 0; i < (cfg.minor || 6); i++){
+    const e = Math.floor(rng()*4), t = rng(); let x, y, a;
+    if (e === 0){ x = W*t; y = -4;   a = Math.PI/2 + (rng()-0.5); }
+    else if (e === 1){ x = W+4; y = H*t; a = Math.PI + (rng()-0.5); }
+    else if (e === 2){ x = W*t; y = H+4; a = -Math.PI/2 + (rng()-0.5); }
+    else { x = -4; y = H*t; a = rng()-0.5; }
+    branch(x, y, a, tl*(0.55 + rng()*0.4), tw*(0.35 + rng()*0.3), 1);
+  }
+  segs.sort((p,q) => p.w - q.w);
+  return segs;
+}
+function veinStyle(w){
+  if (w > 7)   return ['#2E0203', 1];
+  if (w > 4)   return ['#4E080A', 1];
+  if (w > 2.2) return ['#7C1A1D', .95];
+  if (w > 1.1) return ['#A03F41', .8];
+  return ['#B96E6E', .5];
+}
+function animateVeins(canvas, seed, cfg, ms){
+  const ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+  const segs = growVeins(seed, W, H, cfg), t0 = performance.now();
+  let raf = 0;
+  (function frame(t){
+    const p = Math.min(1, (t - t0)/ms), e = 1 - Math.pow(1-p, 2.2);
+    ctx.clearRect(0,0,W,H); ctx.lineCap = 'round';
+    const n = Math.floor(segs.length * e);
+    for (let i = 0; i < n; i++){
+      const s = segs[i], [col, al] = veinStyle(s.w);
+      ctx.globalAlpha = al; ctx.strokeStyle = col; ctx.lineWidth = s.w;
+      ctx.beginPath(); ctx.moveTo(s.x, s.y);
+      ctx.quadraticCurveTo(s.mx, s.my, s.ex, s.ey); ctx.stroke();
+      if (s.depth <= 3 && s.w > 2.6){
+        ctx.fillStyle = col; ctx.beginPath();
+        ctx.ellipse(s.ex, s.ey, s.w*1.5, s.w*1.15, s.depth, 0, Math.PI*2); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+    if (p < 1) raf = requestAnimationFrame(frame);
+  })(performance.now());
+  return () => cancelAnimationFrame(raf);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   3. 캐릭터 — 얼굴 1 · 몸통 1 · 팔 2 · 다리 2 의 평면 도형 조합
+      좌표계는 1000×1000 정사각형. 그리는 쪽에서 원하는 크기로 매핑합니다.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* n각형. 각도는 균등하게 두고 반지름만 흔들기 때문에
+   꼭짓점 순서가 절대 뒤집히지 않습니다 → 항상 자기교차 없는 단순 다각형. */
+function polygonPts(n, R, jitter, rng){
+  /* 정n각형 면적 계수. 삼각형은 15각형보다 훨씬 작아 보이므로
+     반지름을 키워 시각적 크기를 맞춘다. */
+  const area = k => (k/2) * Math.sin(2*Math.PI/k);
+  const R2 = R * clamp(Math.pow(area(15)/area(n), 0.42), 1, 1.4);
+  const pts = [], a0 = -Math.PI/2;
+  for (let i = 0; i < n; i++){
+    const ang = a0 + i*2*Math.PI/n;
+    const r = R2 * (1 - jitter + rng()*jitter*2);
+    pts.push([Math.cos(ang)*r, Math.sin(ang)*r]);
+  }
+  return pts;
+}
+
+function paletteFor(mode, seed){
+  const [step, lVar, sAdd] = PALETTE_MODE[mode];
+  const rng = mulberry32((seed ^ 0x5bf03635) >>> 0);
+  const h0 = Math.floor(rng()*7);
+  const mk = (k, lOff) => {
+    const h = HUES[(h0 + k*step + 7) % 7];
+    const s = clamp(44 + sAdd + rng()*6, 30, 78);
+    const l = clamp(79 + lOff, 66, 88);
+    return 'hsl(' + h + ' ' + s.toFixed(0) + '% ' + l.toFixed(0) + '%)';
+  };
+  /* 팔·다리는 몸통과 최소한의 명도차를 강제한다 —
+     팔레트 0(단색)에서도 실루엣이 사라지지 않도록. */
+  return {
+    torso: mk(0,  0),
+    face:  mk(1,  Math.max(lVar * 0.9, 6)),
+    arm:   mk(2, -Math.max(lVar * 0.7, 8)),
+    leg:   mk(3, -Math.max(lVar * 0.4, 7))
+  };
+}
+
+function buildCharacter(R){
+  return {
+    faceN:  R.faceN,                           // 3 ~ 15각형  ← 개방성
+    jitter: R.S * 0.30,                        // 0 ~ 0.30    ← 자의식
+    mode:   R.mode,                            // 팔레트 0~6  ← 구별 욕구
+    legs:   R.legs ? 'rect' : 'tri',           // 경직 ↔ 유연 ← 종결 욕구
+    col:    paletteFor(R.mode, R.seed),
+    seed:   R.seed,
+    spd:    [3.2, 2.5, 1.9, 1.45][R.tier]      // 흔들림 속도 = 응답 속도
+  };
+}
+
+/* 회전 사각형(팔·다리)을 그린다 */
+function limbRect(ctx, x, y, len, w, ang, col){
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+  ctx.fillStyle = col;
+  ctx.beginPath();
+  const r = w * 0.5;
+  ctx.moveTo(-r, 0); ctx.lineTo(r, 0); ctx.lineTo(r, len - r);
+  ctx.arc(0, len - r, r, 0, Math.PI); ctx.lineTo(-r, len - r);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+function limbTri(ctx, x, y, len, w, ang, col){
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+  ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(-w*0.5, 0); ctx.lineTo(w*0.5, 0); ctx.lineTo(0, len);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+/* t = 초. reveal = 0~1 (조립 애니메이션용, 1이면 전부 보임) */
+function drawCharacter(ctx, C, bx, by, size, t, reveal){
+  const rv = reveal === undefined ? 1 : reveal;
+  const k = size / 1000;
+  ctx.save();
+  ctx.translate(bx, by); ctx.scale(k, k);
+
+  const w1 = Math.sin(t * C.spd), w2 = Math.sin(t * C.spd + 1.15);
+  const part = (i) => clamp((rv - i*0.16) / 0.34, 0, 1);   // 부위별 등장 진행도
+
+  // 패널을 좀 더 채우도록 전체를 살짝 키운다
+  ctx.translate(500, 540); ctx.scale(1.10, 1.10); ctx.translate(-500, -540);
+  // 몸 전체를 발치 기준으로 아주 조금 기울인다
+  ctx.translate(500, 940); ctx.rotate(w1 * 0.033); ctx.translate(-500, -940);
+
+  // ── 다리 2 ──
+  const legA = part(3);
+  if (legA > 0){
+    ctx.globalAlpha = legA;
+    const legLen = (C.legs === 'rect' ? 172 : 186) * legA, lw = C.legs === 'rect' ? 72 : 108;
+    const f = C.legs === 'rect' ? limbRect : limbTri;
+    f(ctx, 438, 776, legLen, lw,  0.05 + w1*0.05, C.col.leg);
+    f(ctx, 562, 776, legLen, lw, -0.05 - w1*0.05, C.col.leg);
+  }
+  // ── 팔 2 ──
+  const armA = part(2);
+  if (armA > 0){
+    ctx.globalAlpha = armA;
+    const armLen = 214 * armA;
+    limbRect(ctx, 396, 512, armLen, 48,  0.44 + w2*0.2, C.col.arm);
+    limbRect(ctx, 604, 512, armLen, 48, -0.44 - w2*0.2, C.col.arm);
+  }
+  // ── 몸통 1 (사다리꼴) ──
+  const bodyA = part(1);
+  if (bodyA > 0){
+    ctx.globalAlpha = bodyA;
+    ctx.fillStyle = C.col.torso;
+    ctx.beginPath();
+    ctx.moveTo(386, 462); ctx.lineTo(614, 462);
+    ctx.lineTo(640, 786); ctx.lineTo(360, 786);
+    ctx.closePath(); ctx.fill();
+  }
+  // ── 얼굴 1 (n각형) ──
+  const faceA = part(0);
+  if (faceA > 0){
+    ctx.globalAlpha = faceA;
+    const rng = mulberry32((C.seed ^ 0x27d4eb2f) >>> 0);
+    const pts = polygonPts(C.faceN, 150, C.jitter, rng);
+    /* 다각형마다 아래끝이 달라서 그냥 두면 삼각형 머리가 붕 뜬다.
+       실제 최저점을 어깨선(462) 살짝 위에 맞춘다. */
+    let maxY = -1e9; for (const q of pts) if (q[1] > maxY) maxY = q[1];
+    const cy = 452 - maxY;
+    ctx.save();
+    ctx.translate(500, cy + w2*-8 + (1-faceA)*-44);
+    ctx.rotate(w2 * 0.06);
+    ctx.fillStyle = C.col.face;
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.closePath(); ctx.fill();
+    if (FACE_EYES){
+      ctx.fillStyle = 'rgba(23,19,26,.82)';
+      const ey = maxY * 0.16;
+      ctx.beginPath(); ctx.arc(-42, ey, 12.5, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc( 42, ey, 12.5, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   4. 캔버스 텍스트 헬퍼
+   ══════════════════════════════════════════════════════════════════ */
+function wrapText(ctx, text, maxW){
+  const out = [];
+  String(text).split('\n').forEach(para => {
+    const words = para.split(' ');
+    let line = '';
+    const push = l => { if (l !== '') out.push(l); };
+    for (let i = 0; i < words.length; i++){
+      const w = words[i], test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width <= maxW){ line = test; continue; }
+      if (ctx.measureText(w).width > maxW){
+        push(line); line = ''; let buf = '';
+        for (const ch of w){
+          if (ctx.measureText(buf + ch).width > maxW && buf){ out.push(buf); buf = ch; }
+          else buf += ch;
+        }
+        line = buf;
+      } else { push(line); line = w; }
+    }
+    push(line);
+  });
+  return out.length ? out : [''];
+}
+function drawTracked(ctx, text, x, y, track, align){
+  const chars = [...String(text)];
+  let total = 0;
+  for (const c of chars) total += ctx.measureText(c).width + track;
+  total -= track;
+  let cx = align === 'right' ? x - total : align === 'center' ? x - total/2 : x;
+  const prev = ctx.textAlign; ctx.textAlign = 'left';
+  for (const c of chars){ ctx.fillText(c, cx, y); cx += ctx.measureText(c).width + track; }
+  ctx.textAlign = prev;
+  return total;
+}
+function hairline(ctx, x, y, w, col, alpha, h){
+  ctx.save(); ctx.globalAlpha = alpha === undefined ? .22 : alpha;
+  ctx.fillStyle = col || PAL.ink; ctx.fillRect(x, y, w, h || 1.6); ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   5. 상태 & 문항 진행
+   ══════════════════════════════════════════════════════════════════ */
+const state = { i:0, picks:[], times:[], qStart:0, result:null };
+
+/* 각 축의 만점을 데이터에서 직접 계산한다 (문항을 고쳐도 자동으로 맞음) */
+const AXIS_MAX = (function(){
+  const m = {O:0, D:0, S:0, C:0};
+  QUESTIONS.forEach(q => {
+    const best = {O:0, D:0, S:0, C:0};
+    q.a.forEach(o => { for (const k in o.s) best[k] = Math.max(best[k], o.s[k]); });
+    for (const k in best) m[k] += best[k];
+  });
+  return m;
+})();
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  $('#' + id).classList.add('on');
+  window.scrollTo({top:0});
+}
+
+function renderQuestion(){
+  const n = state.i, Q = QUESTIONS[n];
+  $('#qcount').textContent = String(n+1).padStart(2,'0') + ' / ' + String(QUESTIONS.length).padStart(2,'0');
+  $('#pbarFill').style.width = (n / QUESTIONS.length * 100) + '%';
+  $('#qtext').textContent = T(Q.q);
+  const box = $('#opts'); box.innerHTML = '';
+  Q.a.forEach((opt, idx) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'opt' + (state.picks[n] === idx ? ' picked' : '');
+    b.innerHTML = '<span class="mk">' + 'ABCD'[idx] + '</span><span></span>';
+    b.lastChild.textContent = T(opt);
+    b.addEventListener('click', () => pick(idx));
+    box.appendChild(b);
+  });
+  const back = $('#back');
+  back.hidden = n === 0; back.textContent = T(UI.back);
+  $('#qhint').textContent = T(UI.qhint);
+  state.qStart = Date.now();          // ← 문항이 화면에 뜬 순간
+}
+
+function pick(idx){
+  state.times[state.i] = clamp(Date.now() - state.qStart, 120, MAX_Q_MS);
+  state.picks[state.i] = idx;
+  if (state.i < QUESTIONS.length - 1){ state.i++; renderQuestion(); }
+  else { $('#pbarFill').style.width = '100%'; runLoading(); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   6. 채점 — 4개 축
+   ══════════════════════════════════════════════════════════════════ */
+/* 채점의 순수 계산부. 문자열을 만들지 않으므로 전수 검증에 그대로 쓸 수 있습니다. */
+function score(picks, times){
+  const raw = {O:0, D:0, S:0, C:0};
+  for (let qi = 0; qi < picks.length; qi++){
+    const sc = QUESTIONS[qi].a[picks[qi]].s;
+    for (const k in sc) raw[k] += sc[k];
+  }
+  const O = raw.O/AXIS_MAX.O, D = raw.D/AXIS_MAX.D, S = raw.S/AXIS_MAX.S, C = raw.C/AXIS_MAX.C;
+
+  let sum = 0, bIdx = 0;
+  for (let i = 0; i < times.length; i++){ sum += times[i]; if (times[i] > times[bIdx]) bIdx = i; }
+  const avg  = sum / times.length / 1000;
+  const tier = avg < TEMPO_CUT[0] ? 0 : avg < TEMPO_CUT[1] ? 1 : avg < TEMPO_CUT[2] ? 2 : 3;
+
+  const sorted = times.slice().sort((a,b) => a-b);
+  const median = sorted[Math.floor(sorted.length/2)];
+  const bSec   = times[bIdx]/1000;
+  const bSlot  = (bSec >= BOTTLENECK_MIN_SEC && times[bIdx] >= median*BOTTLENECK_RATIO)
+                 ? bIdx : BOTTLENECK.length - 1;
+
+  const dB = bandOf(D, AXIS_CUT.D), oB = bandOf(O, AXIS_CUT.O);
+  const sB = bandOf(S, AXIS_CUT.S), cB = bandOf(C, AXIS_CUT.C);
+  const aniIdx = dB*4 + oB, modIdx = sB*4 + cB;
+  const faceN  = 3 + raw.O;                     // 원점수 0~12 → 3~15각형 (13단계 전부 도달)
+  const jitLv  = Math.round(S*4);               // 왜곡 5단계
+  const mode   = Math.round(D*6);               // 팔레트 7단계
+  const legs   = C >= 0.5 ? 1 : 0;              // 1=사각형(경직) 0=삼각형(유연)
+  const seed   = ((((aniIdx*16 + modIdx)*13 + (faceN-3))*8 + jitLv)*7 + mode)*2 + legs;
+
+  return {O,D,S,C, avg, tier, bIdx, bSec, bSlot, dB,oB,sB,cB, aniIdx, modIdx,
+          faceN, jitLv, mode, legs, seed};
+}
+
+function compute(){
+  const R = score(state.picks, state.times);
+  const animal = ANIMALS[R.aniIdx], mod = MODIFIERS[R.modIdx];
+
+  /* 상극 = 대각선 반대 / 찰떡 = 구별은 같고 개방만 한 칸 옆 */
+  const clashIdx = (3-R.dB)*4 + (3-R.oB);
+  const matchOB  = R.oB === 0 ? 1 : R.oB === 3 ? 2 : (R.dB % 2 ? R.oB-1 : R.oB+1);
+  const matchIdx = R.dB*4 + matchOB;
+  const dist = Math.abs(R.dB - (3-R.dB)) + Math.abs(R.oB - (3-R.oB));
+
+  return Object.assign({}, R, {
+    name:   T(mod) + ' ' + T(animal),
+    /* 부제는 반대 언어의 이름. 한국어 화면엔 영문 이름이, 영어 화면엔
+       한글 원본이 붙어서 어느 쪽이든 한 줄이 더 재밌어집니다. */
+    nameAlt: LANG === 'ko' ? (mod.en + ' ' + animal.en) : (mod.ko + ' ' + animal.ko),
+    nameEn: MODIFIERS[R.modIdx].en + ' ' + ANIMALS[R.aniIdx].en,
+    /* 1줄 = 무엇을 좋아하나(D×O) · 2줄 = 어떻게 구나(S×C) · 3줄 = 심리 분석(D×S) */
+    desc:   T(animal.line) + '\n' + T(mod.line) + '\n'
+            + T(ANALYSIS[R.dB*4 + R.sB])
+            + (SHOW_SHAPE_LINE
+               ? '\n' + T(SHAPE_FACE).replace('{n}', String(R.faceN))
+                 + T(SHAPE_LEG[R.legs]) + ' ' + T(SHAPE_COL[R.mode <= 1 ? 0 : R.mode <= 4 ? 1 : 2])
+               : ''),
+    stats:  [Math.round(R.O*100), Math.round(R.D*100), Math.round(R.S*100), Math.round(R.C*100)],
+    tempoName: T(TEMPO[R.tier].name),
+    tempoLine: T(TEMPO[R.tier].line).replace('{avg}', R.avg.toFixed(1)),
+    bottleneck: T(BOTTLENECK[R.bSlot]).replace('{s}', R.bSec < 10 ? R.bSec.toFixed(1) : String(Math.round(R.bSec))),
+    clashName: T(ANIMALS[clashIdx]),
+    clashLine: T(CLASH_LINE[dist % 4]),
+    matchName: T(ANIMALS[matchIdx]),
+    matchLine: T(MATCH_LINE[(R.aniIdx + R.modIdx) % 4])
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   7. 판독 중 — 캐릭터가 조립된다
+   ══════════════════════════════════════════════════════════════════ */
+let stopLoad = null;
+function runLoading(){
+  show('load');
+  state.result = compute();
+  const C = buildCharacter(state.result);
+  state.char = C;
+
+  const cv = $('#figLoad'), ctx = cv.getContext('2d'), t0 = performance.now();
+  if (stopLoad) stopLoad();
+  let raf = 0;
+  (function frame(now){
+    const el = (now - t0) / 1000;
+    const rv = Math.min(1, el / 1.55);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    drawCharacter(ctx, C, 0, 0, cv.width, el, rv);
+    raf = requestAnimationFrame(frame);
+  })(t0);
+  stopLoad = () => cancelAnimationFrame(raf);
+
+  let k = 0;
+  (function tick(){
+    if (k >= LOAD_LINES.length) return;
+    $('#loadLine').textContent = LOAD_LINES[k].en;
+    $('#loadKo').textContent   = LANG === 'ko' ? LOAD_LINES[k].ko : '';
+    k++; if (k < LOAD_LINES.length) setTimeout(tick, 350);
+  })();
+
+  setTimeout(async () => {
+    await drawCard(state.result, C);
+    if (stopLoad) { stopLoad(); stopLoad = null; }
+    show('result');
+    startCardAnim();
+  }, 2000);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   8. 결과 카드 1080×1920 — 화면에 보이는 것이 곧 저장되는 PNG
+      캐릭터 영역만 매 프레임 다시 칠해서 흔들림을 만듭니다.
+   ══════════════════════════════════════════════════════════════════ */
+let cardBase = null, cardPanel = null, cardAnimRaf = 0, cardChar = null;
+
+async function ensureFonts(texts){
+  if (!document.fonts) return;
+  const sample = (texts || []).join(' ').slice(0, 400) + ' 가나다ABC0123456789';
+  const want = ['400 78px "Black Han Sans"', '400 40px "Black Han Sans"',
+                '400 40px "Bodoni Moda"', '400 30px "Bodoni Moda"',
+                '400 29px "Pretendard Variable"', '600 20px "Pretendard Variable"'];
+  try{
+    await Promise.race([
+      Promise.all(want.map(f => document.fonts.load(f, sample).catch(()=>{}))),
+      new Promise(r => setTimeout(r, 2500))
+    ]);
+    await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 800))]);
+  }catch(e){}
+}
+
+async function drawCard(R, C){
+  await ensureFonts([R.name, R.nameAlt, R.nameEn, R.desc, R.tempoLine, R.bottleneck, R.clashLine, R.matchLine]);
+
+  const W = 1080, H = 1920, M = 84, CW = W - M*2;
+  const base = document.createElement('canvas'); base.width = W; base.height = H;
+  const ctx = base.getContext('2d');
+
+  /* 바탕 */
+  ctx.fillStyle = PAL.paper; ctx.fillRect(0,0,W,H);
+  const rb = mulberry32((R.seed ^ 0x9E3779B9) >>> 0);
+  for (let i = 0; i < 210; i++){
+    ctx.globalAlpha = 0.006 + rb()*0.010;
+    ctx.fillStyle = rb() > .55 ? '#8B8289' : '#C9B9A8';
+    ctx.beginPath(); ctx.arc(rb()*W, rb()*H, 8 + rb()*46, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = PAL.ink; ctx.globalAlpha = .16; ctx.lineWidth = 2;
+  ctx.strokeRect(44.5, 44.5, W-89, H-89); ctx.globalAlpha = 1;
+  ctx.textBaseline = 'alphabetic';
+
+  /* 측정 */
+  const nameSize = 78;
+  ctx.font = '400 ' + nameSize + 'px ' + F_DISPLAY;
+  const nameLines = wrapText(ctx, R.name, CW);
+  ctx.font = '400 28px ' + F_SANS;
+  const descLines = wrapText(ctx, R.desc, CW);
+  ctx.font = '400 27px ' + F_SANS;
+  const tempoLines  = wrapText(ctx, R.tempoLine, CW);
+  const bottleLines = wrapText(ctx, R.bottleneck, CW);
+
+  /* 레이아웃 역산 — 남는 높이는 전부 캐릭터 패널이 흡수한다 */
+  const panelTop  = 396 + (nameLines.length - 1) * 88;
+  const TAIL_FIX  = 442;
+  const flow      = descLines.length*45 + tempoLines.length*38 + bottleLines.length*38;
+  const footTop   = H - 96 - 42;
+  let adReserve   = AD_IN_CARD ? 78 : 44;
+  let side        = footTop - adReserve - TAIL_FIX - flow - panelTop;
+  if (side < 420){ adReserve = 12; side = footTop - adReserve - TAIL_FIX - flow - panelTop; }
+  side = clamp(side, 380, 780);
+
+  /* ── 머리말 ── */
+  let y = 126;
+  ctx.fillStyle = PAL.inkMute; ctx.font = '500 21px ' + F_MONO;
+  drawTracked(ctx, T(CARD_LABEL.brand).toUpperCase(), M, y, TRK, 'left');
+  ctx.fillStyle = PAL.gallery; ctx.font = '400 23px ' + F_EN;
+  drawTracked(ctx, 'No.' + String(R.seed).padStart(6,'0'), W - M, y, 1.2, 'right');
+  y += 24; hairline(ctx, M, y, CW, PAL.ink, .3, 2);
+
+  /* ── 이름 ── */
+  y += 58;
+  ctx.fillStyle = PAL.signal; ctx.font = '600 20px ' + F_MONO;
+  drawTracked(ctx, T(CARD_LABEL.you).toUpperCase(), M, y, TRK, 'left');
+  y += 76;
+  ctx.fillStyle = PAL.ink; ctx.font = '400 ' + nameSize + 'px ' + F_DISPLAY;
+  nameLines.forEach((l, i) => { if (i) y += 88; ctx.fillText(l, M, y); });
+  y += 46;
+  ctx.fillStyle = PAL.gallery;
+  ctx.font = (LANG === 'ko' ? '400 32px ' + F_EN : '400 30px ' + F_SANS);
+  ctx.fillText(R.nameAlt, M, y);
+  y += 30; hairline(ctx, M, y, CW, PAL.ink, .28, 2);
+
+  /* ── 캐릭터 자리 : 1:1 영역만 잡아두고 바탕은 칠하지 않는다.
+        카드 종이색과 질감이 그대로 이어져서 경계선이 보이지 않습니다. ── */
+  y += 36;
+  const px = (W - side)/2, py = y;
+  y += side;
+
+  /* ── 설명 ── */
+  y += 52;
+  ctx.fillStyle = PAL.inkSoft; ctx.font = '400 28px ' + F_SANS;
+  descLines.forEach((l, i) => { if (i) y += 45; ctx.fillText(l, M, y); });
+
+  /* ── 4개 축 ── */
+  y += 52;
+  const colW = CW / 4;
+  R.stats.forEach((v, i) => {
+    const cx = M + colW*i;
+    ctx.fillStyle = PAL.inkMute; ctx.font = '600 17px ' + F_MONO;
+    drawTracked(ctx, T(STAT_LABEL[i]).toUpperCase(), cx, y + 16, LANG==='ko'?1.6:2.2, 'left');
+    ctx.fillStyle = i === 3 ? PAL.gallery : PAL.blood;
+    ctx.font = '400 42px ' + F_EN;
+    ctx.fillText(String(v), cx, y + 66);
+    const n = 12, gap = (colW - 26)/n, on = Math.round(v/100*n);
+    for (let k = 0; k < n; k++){
+      ctx.globalAlpha = k < on ? 1 : .18;
+      ctx.fillStyle = k < on ? (i === 3 ? PAL.gallery : PAL.blood) : PAL.ink;
+      ctx.fillRect(cx + k*gap, y + 82, Math.max(2.5, gap*0.42), k < on ? 12 : 6);
+    }
+    ctx.globalAlpha = 1;
+  });
+  y += 92;
+
+  /* ── 응답 속도 · 병목 ── */
+  y += 54;
+  ctx.fillStyle = PAL.signal; ctx.font = '600 20px ' + F_MONO;
+  drawTracked(ctx, T(CARD_LABEL.tempo).toUpperCase(), M, y, TRK, 'left');
+  ctx.fillStyle = PAL.ink; ctx.font = '400 34px ' + F_DISPLAY;
+  ctx.fillText(R.tempoName, M + 190, y + 4);
+  y += 44;
+  ctx.fillStyle = PAL.inkSoft; ctx.font = '400 27px ' + F_SANS;
+  tempoLines.forEach((l, i) => { if (i) y += 38; ctx.fillText(l, M, y); });
+  y += 8;
+  ctx.fillStyle = PAL.blood;
+  bottleLines.forEach((l, i) => { y += 38; ctx.fillText(l, M, y); });
+
+  /* ── 상극 · 찰떡 ── */
+  y += 46; hairline(ctx, M, y, CW, PAL.ink, .28, 2);
+  y += 48;
+  const badge = (label, name, line, col) => {
+    ctx.fillStyle = col; ctx.font = '600 18px ' + F_MONO;
+    const lw = drawTracked(ctx, label.toUpperCase(), M, y, LANG==='ko'?1.6:2.4, 'left');
+    ctx.fillStyle = PAL.ink; ctx.font = '400 30px ' + F_DISPLAY;
+    const nw = ctx.measureText(name).width;
+    ctx.fillText(name, M + lw + 22, y + 3);
+    ctx.fillStyle = PAL.inkMute; ctx.font = '400 24px ' + F_SANS;
+    ctx.fillText(line, M + lw + nw + 42, y + 1);
+  };
+  badge(T(CARD_LABEL.clash), R.clashName, R.clashLine, PAL.signal);
+  y += 46;
+  badge(T(CARD_LABEL.match), R.matchName, R.matchLine, PAL.gallery);
+
+  /* ── 광고 자리 (상극/찰떡 바로 아래) ── */
+  y += adReserve;
+  if (AD_IN_CARD){
+    hairline(ctx, M, y - 42, CW, PAL.ink, .14, 1.4);
+    ctx.fillStyle = PAL.inkMute; ctx.font = '500 21px ' + F_MONO;
+    drawTracked(ctx, T(AD_IN_CARD).toUpperCase(), M, y - 8, 3, 'left');
+  }
+  base.__contentEnd = y;
+
+  /* ── 꼬리말 ── */
+  const fy = H - 96;
+  base.__footTop = fy - 42;
+  hairline(ctx, M, fy - 42, CW, PAL.ink, .3, 2);
+  ctx.fillStyle = PAL.gallery; ctx.font = 'italic 400 30px ' + F_EN;
+  ctx.fillText(T(CARD_LABEL.tagline), M, fy + 4);
+  ctx.fillStyle = PAL.inkMute; ctx.font = '500 20px ' + F_MONO;
+  drawTracked(ctx, LANG === 'ko' ? '꺼드럭 자아 생성기' : 'GGEODEUK.', W - M, fy + 2, TRK, 'right');
+
+  cardBase  = base;
+  cardPanel = {x:px, y:py, side:side};
+  cardChar  = C;
+
+  /* 첫 프레임을 즉시 그려 둔다 */
+  paintCardFrame(0);
+}
+
+function paintCardFrame(tSec){
+  const cv = $('#card'), ctx = cv.getContext('2d');
+  if (!cardBase) return;
+  ctx.drawImage(cardBase, 0, 0);
+  const p = cardPanel;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(p.x, p.y, p.side, p.side); ctx.clip();
+  drawCharacter(ctx, cardChar, p.x, p.y, p.side, tSec, 1);
+  ctx.restore();
+}
+/* 이후 프레임은 캐릭터 영역만 다시 칠한다 (전체 재합성보다 훨씬 가볍다) */
+function paintCardChar(tSec){
+  const cv = $('#card'), ctx = cv.getContext('2d');
+  if (!cardBase) return;
+  const p = cardPanel;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(p.x, p.y, p.side, p.side); ctx.clip();
+  ctx.drawImage(cardBase, p.x, p.y, p.side, p.side, p.x, p.y, p.side, p.side);
+  drawCharacter(ctx, cardChar, p.x, p.y, p.side, tSec, 1);
+  ctx.restore();
+}
+function startCardAnim(){
+  cancelAnimationFrame(cardAnimRaf);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { paintCardFrame(0); return; }
+  const t0 = performance.now();
+  let last = 0;
+  (function frame(now){
+    cardAnimRaf = requestAnimationFrame(frame);
+    if (now - last < 33) return;              // 30fps로 제한
+    last = now;
+    if (document.hidden || !$('#result').classList.contains('on')) return;
+    paintCardChar((now - t0)/1000);
+  })(t0);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   9. 저장 · 복사 · 공유
+   ══════════════════════════════════════════════════════════════════ */
+function toast(msg){
+  const el = $('#toast'); el.textContent = msg; el.classList.add('on');
+  clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('on'), 2400);
+}
+const cardBlob = () => new Promise(res => $('#card').toBlob(res, 'image/png'));
+const fileName = () => 'ggeodeuk_' + (state.result ? state.result.nameEn.replace(/[^A-Za-z]+/g,'_').toLowerCase() : 'card') + '.png';
+
+function download(blob){
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = fileName();
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+$('#save').addEventListener('click', async () => { download(await cardBlob()); toast(T(UI.saved)); });
+
+let SHARE_MODE = false;
+$('#copy').addEventListener('click', async () => {
+  const blob = await cardBlob();
+  if (SHARE_MODE){
+    try{
+      await navigator.share({files:[new File([blob], fileName(), {type:'image/png'})], title:'꺼드럭 자아 생성기'});
+      return;
+    }catch(e){ if (e && e.name === 'AbortError') return; }
+  }
+  try{
+    await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+    toast(T(UI.copied));
+  }catch(e){
+    try{
+      await navigator.clipboard.write([new ClipboardItem({'image/png': Promise.resolve(blob)})]);
+      toast(T(UI.copied));
+    }catch(e2){ download(blob); toast(T(UI.copyFail)); }
+  }
+});
+
+$('#again').addEventListener('click', () => {
+  cancelAnimationFrame(cardAnimRaf);
+  state.i = 0; state.picks = []; state.times = []; state.result = null;
+  $('#pbarFill').style.width = '0%';
+  renderQuestion(); show('quiz');
+});
+
+$('#back').addEventListener('click', () => {
+  if (state.i > 0){ state.i--; state.times[state.i] = undefined; renderQuestion(); }
+});
+
+/* ══════════════════════════════════════════════════════════════════
+   10. 부팅
+   ══════════════════════════════════════════════════════════════════ */
+function boot(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const v = T(UI[el.dataset.t]); if (v !== undefined) el.innerHTML = v;
+  });
+  $('#start').textContent = T(UI.start);
+  $('#save').textContent  = T(UI.save);
+  $('#again').textContent = T(UI.again);
+  try{
+    const probe = new File([new Blob([''],{type:'image/png'})], 'a.png', {type:'image/png'});
+    SHARE_MODE = !!(navigator.canShare && navigator.canShare({files:[probe]}) && matchMedia('(pointer:coarse)').matches);
+  }catch(e){ SHARE_MODE = false; }
+  $('#copy').textContent = SHARE_MODE ? T(UI.share) : T(UI.copy);
+  if (!AD_SLOT_VISIBLE) $('#ad-below').classList.add('hidden');
+
+  animateVeins($('#veinIntro'), 20260828, {depth:8, trunk:11, len:118, minor:7}, 1900);
+  $('#start').addEventListener('click', () => { renderQuestion(); show('quiz'); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && cardBase && $('#result').classList.contains('on')) startCardAnim(); });
+  ensureFonts([]);
+}
+boot();
+</script>
+</body>
+</html>
