@@ -8,6 +8,13 @@
 <meta property="og:title" content="꺼드럭 자아 생성기">
 <meta property="og:description" content="10문항으로 뽑는 나의 자아 캐릭터. 넌 확신의 고양이야? 나는 그냥 여우인데.">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="꺼드럭 자아 생성기">
+<meta property="og:url" content="https://ggeodeuk.com/">
+<meta property="og:image" content="https://ggeodeuk.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://ggeodeuk.com/">
 <meta name="theme-color" content="#F2EFEA">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F2EFEA'/%3E%3Cpath d='M16 3v26M16 11l7-5M16 16l-8-5M16 21l6 4M16 8l-5-3' stroke='%23790F12' stroke-width='2.2' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23790F12'/%3E%3C/svg%3E">
 
@@ -18,6 +25,8 @@
      같이 드린 BlackHanSansRegular.ttf 와 OFL.txt 를 쓰시면 됩니다. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+
 
 <style>
 :root{
@@ -159,6 +168,15 @@ footer{text-align:center;padding:clamp(28px,5.5vh,50px) var(--gut) clamp(24px,4.
   font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(23,19,26,.34);word-break:keep-all}
 footer .rule{margin-bottom:1.6em;opacity:.14}
 
+/* ── 사이트 내비게이션 · 푸터 ── */
+.sitenav{display:flex;flex-wrap:wrap;justify-content:center;gap:.45em 1.15em;margin:0 0 1.3em}
+.sitenav a{font-size:13px;color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent}
+.sitenav a:hover{color:var(--blood);border-bottom-color:var(--blood)}
+.morelinks{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;max-width:min(100%,420px);margin:clamp(16px,3vh,24px) auto 0}
+.morelinks a{flex:1 1 auto;text-align:center;border:1px solid rgba(23,19,26,.28);color:var(--ink-soft);
+  text-decoration:none;padding:.8em 1em;font-size:14px;transition:background .18s,border-color .18s,color .18s}
+.morelinks a:hover{background:var(--blood);border-color:var(--blood);color:var(--paper)}
+
 @media (max-width:380px){ :root{--gut:18px} }
 </style>
 </head>
@@ -221,17 +239,32 @@ footer .rule{margin-bottom:1.6em;opacity:.14}
     <div class="acts">
       <button class="btn primary" id="save" type="button"></button>
       <button class="btn" id="copy" type="button"></button>
+      <button class="btn wide" id="link" type="button"></button>
       <button class="btn ghost wide" id="again" type="button"></button>
     </div>
 
     <!-- ══ 광고 자리 ══ 상극/찰떡 바로 아래. 여기에 배너를 그대로 넣으면 됩니다.
          JS 상단 AD_SLOT_VISIBLE = false 로 두면 점선까지 사라집니다. -->
     <div class="adslot" id="ad-below" aria-hidden="true"></div>
+
+    <!-- 결과를 본 사람이 갈 곳. 페이지뷰가 늘고, 크롤러도 도감으로 들어갑니다. -->
+    <div class="morelinks">
+      <a href="/dogam/" id="lnk-dogam"></a>
+      <a href="/psychology/" id="lnk-psych"></a>
+    </div>
   </div>
 </section>
 
 <footer>
   <div class="rule"></div>
+  <nav class="sitenav">
+    <a href="/dogam/">캐릭터 도감</a>
+    <a href="/psychology/">심리학 배경</a>
+    <a href="/how-it-works/">채점 방식</a>
+    <a href="/about/">소개</a>
+    <a href="/privacy/">개인정보처리방침</a>
+    <a href="/contact/">연락처</a>
+  </nav>
   <span data-t="footer"></span>
 </footer>
 </div>
@@ -303,7 +336,13 @@ const UI = {
                 en:"Ggeodeuk Ego Generator · satire, for fun"},
   copied:      {ko:"복사했습니다. 스토리에서 붙여넣기 하세요.", en:"Copied. Paste it into your story."},
   copyFail:    {ko:"복사가 막혀 있어 대신 저장했습니다.",       en:"Copying was blocked, so we saved it instead."},
-  saved:       {ko:"저장했습니다.",                            en:"Saved."}
+  saved:       {ko:"저장했습니다.",                            en:"Saved."},
+  link:        {ko:"링크 복사",                                 en:"Copy link"},
+  linkCopied:  {ko:"링크를 복사했습니다. 친구에게 보내보세요.",   en:"Link copied. Send it to a friend."},
+  dogam:       {ko:"캐릭터 도감 16종 보기",                      en:"See all 16 characters"},
+  psych:       {ko:"이 결과가 나온 심리학 배경",                  en:"The psychology behind this"},
+  shared:      {ko:"친구가 공유한 결과입니다",                    en:"A result someone shared with you"},
+  tryMine:     {ko:"나도 발급받기",                              en:"Get mine"}
 };
 
 const LOAD_LINES = [
@@ -1012,6 +1051,8 @@ function runLoading(){
     if (stopLoad) { stopLoad(); stopLoad = null; }
     show('result');
     startCardAnim();
+    try{ history.replaceState(null, '', '?r=' + encodeResult()); }catch(e){}
+    if (window.gtag) gtag('event', 'result_view', {ego: state.result.nameEn});
   }, 2000);
 }
 
@@ -1257,6 +1298,12 @@ $('#copy').addEventListener('click', async () => {
   }
 });
 
+$('#link').addEventListener('click', async () => {
+  const url = shareUrl();
+  try{ await navigator.clipboard.writeText(url); toast(T(UI.linkCopied)); }
+  catch(e){ prompt(T(UI.link), url); }
+});
+
 $('#again').addEventListener('click', () => {
   cancelAnimationFrame(cardAnimRaf);
   state.i = 0; state.picks = []; state.times = []; state.result = null;
@@ -1267,6 +1314,55 @@ $('#again').addEventListener('click', () => {
 $('#back').addEventListener('click', () => {
   if (state.i > 0){ state.i--; state.times[state.i] = undefined; renderQuestion(); }
 });
+
+
+/* ══════════════════════════════════════════════════════════════════
+   9-B. 결과 공유 URL
+   결과를 ?r= 뒤에 실어서, 친구가 링크를 열면 그 사람의 결과가 바로
+   보이게 합니다. 서버가 없으니 상태를 URL에 담는 수밖에 없고,
+   덕분에 공유 한 번이 방문 한 번이 됩니다.
+
+   형식 (15자) : 답안 10자리(0~3) + 평균초×10 (2자리 36진법)
+                 + 병목 문항(1자리, z=없음) + 병목초×10 (2자리 36진법)
+   ══════════════════════════════════════════════════════════════════ */
+const b36 = (n, w) => Math.max(0, Math.min(Math.pow(36, w) - 1, Math.round(n)))
+                        .toString(36).padStart(w, '0');
+
+function encodeResult(){
+  const R = state.result; if (!R) return '';
+  const bIdx = R.bSlot < QUESTIONS.length ? R.bSlot : -1;
+  return state.picks.join('')
+       + b36(R.avg * 10, 2)
+       + (bIdx < 0 ? 'z' : bIdx.toString(36))
+       + b36((bIdx < 0 ? 0 : R.bSec) * 10, 2);
+}
+
+function decodeResult(code){
+  if (!code || !/^[0-3]{10}[0-9a-z]{2}[0-9a-z][0-9a-z]{2}$/.test(code)) return false;
+  const N = QUESTIONS.length;
+  const picks = code.slice(0, N).split('').map(Number);
+  const avg   = parseInt(code.slice(N, N+2), 36) / 10;
+  const bCh   = code[N+2];
+  const bIdx  = bCh === 'z' ? -1 : parseInt(bCh, 36);
+  const bSec  = parseInt(code.slice(N+3, N+5), 36) / 10;
+  if (picks.some(v => !(v >= 0 && v <= 3))) return false;
+  if (bIdx >= N) return false;
+
+  /* 평균과 병목이 원래 값 그대로 재현되도록 시간 배열을 되만든다 */
+  const times = new Array(N).fill(0);
+  if (bIdx < 0){ times.fill(clamp(avg * 1000, 120, MAX_Q_MS)); }
+  else {
+    const rest = clamp((avg * N - bSec) / (N - 1) * 1000, 120, MAX_Q_MS);
+    times.fill(rest);
+    times[bIdx] = clamp(bSec * 1000, 120, MAX_Q_MS);
+  }
+  state.picks = picks; state.times = times;
+  return true;
+}
+
+function shareUrl(){
+  return location.origin + location.pathname + '?r=' + encodeResult();
+}
 
 /* ══════════════════════════════════════════════════════════════════
    10. 부팅
@@ -1286,7 +1382,27 @@ function boot(){
   $('#copy').textContent = SHARE_MODE ? T(UI.share) : T(UI.copy);
   if (!AD_SLOT_VISIBLE) $('#ad-below').classList.add('hidden');
 
-  animateVeins($('#veinIntro'), 20260828, {depth:8, trunk:11, len:118, minor:7}, 1900);
+  $('#lnk-dogam').textContent = T(UI.dogam);
+  $('#lnk-psych').textContent = T(UI.psych);
+  $('#link').textContent = T(UI.link);
+
+  animateVeins($('#veinIntro'), 20260829, {depth:8, trunk:11, len:118, minor:7}, 1900);
+
+  /* 공유 링크로 들어온 경우 — 친구 결과를 바로 띄운다 */
+  const code = new URLSearchParams(location.search).get('r');
+  if (code && decodeResult(code)){
+    state.result = compute();
+    const C = buildCharacter(state.result);
+    drawCard(state.result, C).then(() => {
+      show('result'); startCardAnim();
+      $('#again').textContent = T(UI.tryMine);
+      const n = document.createElement('p');
+      n.className = 'eyebrow';
+      n.style.cssText = 'text-align:center;margin:0 0 .6em';
+      n.textContent = T(UI.shared);
+      $('#result .rhead').prepend(n);
+    });
+  }
   $('#start').addEventListener('click', () => { renderQuestion(); show('quiz'); });
   document.addEventListener('visibilitychange', () => { if (!document.hidden && cardBase && $('#result').classList.contains('on')) startCardAnim(); });
   ensureFonts([]);
